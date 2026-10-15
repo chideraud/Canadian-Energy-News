@@ -1,0 +1,35 @@
+name: Daily Energy News
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 11:00 UTC = 7 a.m. Toronto in summer, 6 a.m. in winter
+  workflow_dispatch:        # adds a "Run workflow" button for testing
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install feedparser
+
+      - run: python energy_news.py
+        env:
+          DIGEST_EMAIL_FROM: ${{ secrets.DIGEST_EMAIL_FROM }}
+          DIGEST_EMAIL_TO: ${{ secrets.DIGEST_EMAIL_TO }}
+          DIGEST_EMAIL_PASS: ${{ secrets.DIGEST_EMAIL_PASS }}
+
+      - name: Save today's post and seen list
+        run: |
+          git config user.name "digest-bot"
+          git config user.email "digest-bot@users.noreply.github.com"
+          git add digests/ seen_articles.json
+          git commit -m "Digest for $(date +%F)" || echo "Nothing new"
+          git push
