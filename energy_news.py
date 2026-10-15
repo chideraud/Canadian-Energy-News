@@ -26,7 +26,7 @@ from zoneinfo import ZoneInfo
 
 import feedparser
 import socket
-socket.setdefaulttimeout(20)
+socket.setdefaulttimeout(20)  # skip any feed that takes over 20 seconds
 
 # ---------------------------------------------------------------------------
 # 1. What to watch — edit these freely
@@ -99,6 +99,15 @@ def google_news_feed(query: str) -> str:
     )
 
 
+def fetch(url: str) -> list:
+    """Read one feed. If it's slow or broken, skip it instead of crashing."""
+    try:
+        return feedparser.parse(url).entries
+    except Exception as err:
+        print(f"Skipped a feed ({type(err).__name__}): {url[:90]}")
+        return []
+
+
 def matches(entry, keywords) -> bool:
     text = (entry.get("title", "") + " " + entry.get("summary", "")).lower()
     return any(k in text for k in keywords)
@@ -125,7 +134,7 @@ def collect() -> dict[str, list[dict]]:
         feeds = [google_news_feed(q) for q in cfg["searches"]] + cfg["feeds"]
         items = []
         for url in feeds:
-            for entry in feedparser.parse(url).entries:
+            for entry in fetch(url):
                 link = entry.get("link")
                 source = entry.get("source", {}).get("title", "")
                 title = clean_title(entry.get("title", "").strip(), source)
