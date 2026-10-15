@@ -1,4 +1,4 @@
-name: Daily Energy News
+name: Daily Energy Brief
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  digest:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,16 +20,17 @@ jobs:
 
       - run: pip install feedparser
 
-      - run: python energy_news.py
+      - name: Build today's page
+        run: python energy_news.py
         env:
           DIGEST_EMAIL_FROM: ${{ secrets.DIGEST_EMAIL_FROM }}
           DIGEST_EMAIL_TO: ${{ secrets.DIGEST_EMAIL_TO }}
           DIGEST_EMAIL_PASS: ${{ secrets.DIGEST_EMAIL_PASS }}
 
-      - name: Save today's post and seen list
+      - name: Publish the updated page
         run: |
-          git config user.name "digest-bot"
-          git config user.email "digest-bot@users.noreply.github.com"
-          git add digests/ seen_articles.json
-          git commit -m "Digest for $(date +%F)" || echo "Nothing new"
+          git config user.name "energy-brief-bot"
+          git config user.email "energy-brief-bot@users.noreply.github.com"
+          git add docs/index.html
+          git commit -m "Brief for $(date +%F)" || echo "No changes"
           git push
