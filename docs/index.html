@@ -40,7 +40,23 @@
   .brand img { width: 34px; height: 34px; border-radius: 8px; flex: none;
                 box-shadow: 0 0 0 1px var(--line); }
   h1 { margin: 0; font: 700 23px/1.15 Georgia, "Times New Roman", serif; letter-spacing: -0.01em; }
-  .updated { margin: 2px 0 12px; color: var(--muted); font-size: 13px; }
+  .subrow { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+             margin: 4px 0 12px; }
+  .updated { margin: 0; color: var(--muted); font-size: 13px; }
+  .jump-select {
+    -webkit-appearance: none; appearance: none; flex: none; max-width: 52%;
+    border: 1px solid var(--line); border-radius: 999px; background-color: var(--card);
+    color: var(--text); font: 600 13px/1.2 inherit; font-family: inherit;
+    padding: 6px 28px 6px 12px; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8378' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 11px center;
+  }
+  .more {
+    display: block; width: 100%; margin-top: 8px; padding: 11px; border-radius: 12px;
+    border: 1px solid var(--line); background: transparent; color: var(--accent);
+    font: 600 14px/1.2 inherit; font-family: inherit; cursor: pointer;
+  }
+  .more[hidden] { display: none; }
   .filters { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 0 16px;
              scrollbar-width: none; }
   .filters::-webkit-scrollbar { display: none; }
@@ -52,13 +68,13 @@
   .filters button[aria-pressed="true"] {
     background: var(--accent-soft); border-color: transparent; color: var(--accent);
   }
-  .filters .n { font-weight: 500; opacity: .75; }
+  .filters .n { display: none; }  /* story counts hidden; remove this line to show them */
   main { max-width: 680px; margin: 0 auto; padding: 4px 16px calc(env(safe-area-inset-bottom) + 32px); }
   h2 {
     font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
     color: var(--muted); margin: 22px 0 8px;
   }
-  h2 span { color: var(--accent); }
+  h2 span { display: none; }  /* story counts hidden; remove this line to show them */
   .month[hidden], li[hidden] { display: none; }
   ul { list-style: none; margin: 0; padding: 0; background: var(--card);
        border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
@@ -82,6 +98,7 @@
     li a:hover .headline { text-decoration: underline; text-underline-offset: 3px;
                              text-decoration-thickness: 1px; }
     .filters button:hover { color: var(--text); }
+    .more:hover { background: var(--card); }
   }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -93,7 +110,8 @@
              padding: 40px 0 24px; border-bottom: 0; background: transparent; }
     .brand img { width: 40px; height: 40px; border-radius: 9px; }
     h1 { font-size: 25px; }
-    .updated { margin: 8px 0 26px; }
+    .subrow { margin: 8px 0 26px; }
+    .jump-select { display: none; }
     .filters { flex-direction: column; gap: 4px; overflow: visible; margin: 0; padding: 0; }
     .filters button { display: flex; justify-content: space-between; align-items: center;
                       width: 100%; text-align: left; border-color: transparent;
@@ -116,8 +134,9 @@
 <body>
 <header>
   <div class="brand"><img src="icon-192.png" alt=""><h1>Canadian Energy Law Brief</h1></div>
-  <p class="updated">Updated Thu, Oct 15, 4:13 pm</p>
-  <div class="filters"><button data-topic="all" aria-pressed="true">All <span class="n">408</span></button><button data-topic="deals---law-firms" aria-pressed="false">Deals &amp; Law Firms <span class="n">176</span></button><button data-topic="courts---litigation" aria-pressed="false">Courts &amp; Litigation <span class="n">91</span></button><button data-topic="regulators---decisions" aria-pressed="false">Regulators &amp; Decisions <span class="n">80</span></button><button data-topic="legislation---policy" aria-pressed="false">Legislation &amp; Policy <span class="n">61</span></button></div>
+  <div class="subrow"><p class="updated">Updated Thu, Oct 15, 4:28 pm</p>
+    <select class="jump-select" aria-label="Jump to month"><option value="">Jump to month</option><option value="m-october-2026">October 2026</option><option value="m-september-2026">September 2026</option><option value="m-august-2026">August 2026</option><option value="m-july-2026">July 2026</option><option value="m-june-2026">June 2026</option><option value="m-may-2026">May 2026</option><option value="m-april-2026">April 2026</option></select></div>
+  <div class="filters"><button data-topic="all" aria-pressed="true">All <span class="n">409</span></button><button data-topic="deals---law-firms" aria-pressed="false">Deals &amp; Law Firms <span class="n">176</span></button><button data-topic="courts---litigation" aria-pressed="false">Courts &amp; Litigation <span class="n">91</span></button><button data-topic="regulators---decisions" aria-pressed="false">Regulators &amp; Decisions <span class="n">80</span></button><button data-topic="legislation---policy" aria-pressed="false">Legislation &amp; Policy <span class="n">62</span></button></div>
   <nav class="jump" aria-label="Jump to month"><p>Jump to</p><a href="#m-october-2026">October 2026</a><a href="#m-september-2026">September 2026</a><a href="#m-august-2026">August 2026</a><a href="#m-july-2026">July 2026</a><a href="#m-june-2026">June 2026</a><a href="#m-may-2026">May 2026</a><a href="#m-april-2026">April 2026</a></nav>
 </header>
 <main>
@@ -226,7 +245,7 @@
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMizAFBVV95cUxPRmduOFFOdXVKUmZNQko2dFF3X0Z3WWZyVlpha3RkUTU5UUprY0JETnE0d0k1UWlfQXhzNUR1TDJPcXlRZmVMS0x3QU1saldCVTM4Y24zY1lrVHJYcksxM2xZYVVWVmVsZzRNUVVSS1dlM0l3TDlqT0tNWVJ4UUUwSjNZOC01d1NSQklxOVg5TEY1MEp0VlhVbnNRYkdhc2k2VTNhS2FDS1Z2azNyZFJTSzhDNjhtaUV0RTVpcDczYnFGSWJYczE5d09uREU?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Supreme Court to consider whether suit may go forward seeking to hold energy companies liable for climate change</div><div class="meta">SCOTUSblog · <time datetime="2026-10-01T07:00:00+00:00">Oct 1</time></div></a></li>
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMickFVX3lxTE94ajNMWG1LNV9oWUt6Qnk1ZUR1aEpRbnc2TUVHU09idEpTSW8tSk50ZWR6OVVDSUpXZ04wbnc3SVRsUGVLUk81UkltQW5wcjRsWkN2bmhwdGZCWnNQbVhLOUJqQldHN1JTSUxIbTBPMks5QQ?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">Canada Will Fast-Track Approval of a Pacific Oil Pipeline With Capacity of 1 Million Barrels a Day</div><div class="meta">SFG Media · <time datetime="2026-10-01T07:00:00+00:00">Oct 1</time></div></a></li>
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5NQ1RHSlpNSXFsNWExR3lOZmRBeE41cGJfUDRQYnFFS3RDZ0xqeTVFU3d3SXZoelN3M1FrZVpITEVPaTNZOUwtTFlHRU5GX3V0aVUyRm91WE5MUQ?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">NDP promises temporary gas tax cut, expanded powers for B.C. Utilities Commission</div><div class="meta">CBC · <time datetime="2026-10-01T07:00:00+00:00">Oct 1</time></div></a></li>
-</ul></section>
+</ul><button class="more" hidden></button></section>
 <section class="month" id="m-september-2026"><h2>September 2026 <span>67</span></h2><ul>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxQVmZVamlKdXhzbWlZNmxaTWx2WHlOQzhSckVQemFndVdPQnNtbGV5RkVhR0haSjlGY2hLeUNQTmplX0UxekdZOHMyTlFKRFNmZ1F1UmR5dTE0Z2c2cnk2ODd1SVBPQl9YYnhwaVVpaUw4MUkxcGk3dTNJVEJaRncwMkVYeUZDTWVsVmg5bzNFcHowaFFrMmd6Sg?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Facing Climate Lawsuits, Big Oil Again Turns to US Supreme Court</div><div class="meta">EnergyNow · <time datetime="2026-09-30T11:46:56+00:00">Sep 30</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi7wFBVV95cUxOelk0dnVtelgzM3FsY1FwWnNhOHl5dnhZeEtLZmFoMlpQaTVaSzdHT19SXzBhMmIxdmZJUlF1UlpiZFRBX1lmd3RMdTk0WV9vaTd3MmZlOTY3MkdwLWExYy1wTkZEdjUzY2VBRWpTLVoxSk1XeGxnbE4tVnBuQU1RdjgwWWFfaVZHd0hpSDFUd1ZLNXJJbE9BTE1fMnZsUE85OWJlWEFBemtVWDdsbDg3emxjWHU3Z190WDJ5Ynh1aDFMc1lSbVZnZjVjdkRseDNPdFZPQWV1R0JUMnhWLXBWVm1fcFF2NUxEUDlDSXpGSQ?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Reading the grid: What Thailand’s draft Power Development Plan 2026 reveals about its power deals</div><div class="meta">Dentons · <time datetime="2026-09-30T10:45:17+00:00">Sep 30</time></div></a></li>
@@ -295,7 +314,7 @@
 <li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMioAFBVV95cUxQMjRwQi1jeTdRME5xRzRtT1Zmb1RWODhuc3NTR2J4LWZpUkswQ1Vod0ZQWjRfWTVuZlJTUWFFaGV3UFU0QWVjTUVzcFg1TWE1TTU4STloTXpwdjVQa1h6SWhMSFJINmJ6WDRBRzR0Ukk0MktlUUlXdmlNQ2hWaTBjVmw5SjY5VW5TcDY2V3d0WnBVODNsMmFZQzFEMzRzb3Zh0gGmAUFVX3lxTFBuTnJ5NU5rSktocW1BNVUyT2JPenlUdGtDQmxVdDdRZi1heF9haUk4QjV6bEZwMlM5UGxxVVN1SmQxQjNPTXhBcFI2ckhEblhWaS1rdHk4XzJILXhBQ0JpS2pxRUpEMFpTTk9mam9pSFJWUl9nRy1odUJoOEpfUzFLZDdURXJRRERPbklHU1BRcFQxUllXZmhHVy1mQnRKVExvcWM4RFE?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Ottawa to announce extension of gas tax holiday beyond Labour Day</div><div class="meta">BOE Report · <time datetime="2026-09-02T07:00:00+00:00">Sep 2</time></div></a></li>
 <li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE9SaEZ4SmxfdDRiR2RMSXJONTRtSE9tbHVLS3g4RzBoNEpQcTdCVFpZd1FPNGw2ODlFTVN6di1qWWtGU2F6SzN4Z0NEVUFWNjhiTkJuWlZfMWJRSXM?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Ottawa extending gas tax holiday to January</div><div class="meta">Durham Radio News · <time datetime="2026-09-02T07:00:00+00:00">Sep 2</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxONWZKWlptMnQwSHlOcDFjbkp6N1o4Y2xLekpuR1FwRTE2bkFJMThKSE1ta0cxLTF6RzBtX09oSDJEaGFTSzc2V25yOHB1NHU3RnREZFg2YkJndEczRXpqSmc3ZlY5YzRUUjFFNjluaGdfQ3lpNEp2eVNPcnJ6MEZhWDZiU0tFUTlvcGZ0aFRjRHNQRmFWNmxNaQ?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Michigan court throws out Enbridge Line 5 tunnel permit — and it could spike gas prices across Ontario and Quebec</div><div class="meta">Money.ca · <time datetime="2026-09-01T07:00:00+00:00">Sep 1</time></div></a></li>
-</ul></section>
+</ul><button class="more" hidden></button></section>
 <section class="month" id="m-august-2026"><h2>August 2026 <span>49</span></h2><ul>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi_wFBVV95cUxNc2Yzb2thOFRpdmFXSlJLMHc1dTlxRDNJM1E5MmJndzdqRnF3emdHdXlfWkVUWlRscXg4Tkh5OVBhZ3pvYUdMdWtCTDhVNkIwNk1SQTlzOWJaUkJ5U01XbkRtUGZxckJxeS1ZZzZuZTdsRXVxYjRXVFF1STMzbEV0eGk2LVF6WGpLMXh6OXZHbXk1WGMwdEVIbGwtZUNBQkx3RE9FZXNFM2pORmhHNTlmM2UyNzFBUk4tSTdrQ3hkTHNEZTNDbUQxbVQ2d3A4SUFSTUlmaW9zT2xRMHdyTE1sck5CMXdaWVB0MUs2cWxZTi1kOEZXazE0R0tabWNnWW8?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Dentons advises syndicate of banks on the financing of Return Energy&#x27;s BESS project Sirius</div><div class="meta">Dentons · <time datetime="2026-08-31T07:00:00+00:00">Aug 31</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi7gFBVV95cUxNRlk1Y2xpV25LNDRjbGNURmkzWVJXU3FKLUxNdVhwYlRLV016ZVg5OUhEUmc1SkEyVk9JTk0yaTF2SUo1enhIRWRmaWtxTDRSbDA0OEQ0ZHhscEQzNklDYktjU3c2dTRrelFkNWtvSkROT0p6VkowUXZLa0R2dWJGdmN6RjQ0bWhORmtIZThRYU9LQndBZ0NNbkpTcWRHWTBSTW1zTXBycjM4cHZ4SmtHLS1oV0VUNHdFM1dxSmdiMi1oWnM3SWx3UjVEbDdCYzVTOENFMXljQ2RjR1NldExpeGRtanNvd05jVkFDWjNR?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">REG - Capricorn Energy PLC DNO ASA - Recommended Cash Acquisition of Capricorn by DNO</div><div class="meta">TradingView · <time datetime="2026-08-31T07:00:00+00:00">Aug 31</time></div></a></li>
@@ -346,8 +365,8 @@
 <li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxQbFNvXzFtV2hvNUJxM3ludzZyT1UxRWJwYnphZ0pnT0dXZWRZNktBNmhIRXdiTVFRTmNWeVFKZ3JlS0hmWWt3OEIwUlh0YjRRcDRjaUQ1d19RbHBqeS1DV0xGaUNYbGV5YnRaRGc0bWQ4QW1Tazc2d3ZSYm1XQjFKTERkOHlXcGd2RlVzVDhsaGZZWTY0V3RaSlg2emV6Q3BPRE85MmhFTVZJbzY3S25SREFrSQ?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Pipeline set to become first project fast-tracked under Building Canada Act</div><div class="meta">iPolitics · <time datetime="2026-08-04T07:00:00+00:00">Aug 4</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxPQnUxSkgxWi1XdVFkZWJJQnc2UGI0LVM5djRkTHBfUnVLMXN6aFR3NFR6TUNmelRoaDFjYUZkT185ZHY0bkZaVVB2elFGNF9lcXR0NG5CbzFOOGQ4MTRaRE1wOW9OdzlYRlNBdlliYzJQWFNVaW1ZWHczZWFRQ1M5YnctVGpyTlRVaGF0emg3MlpCVnZoc1JaQlczZlZkdnp1MTZhdg?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Legal Experts Weigh in on Quebec Lawsuit Over Municipal Flood Prevention</div><div class="meta">The Energy Mix · <time datetime="2026-08-03T07:00:00+00:00">Aug 3</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxPaWRtajJreDVJMGhOOThIQlk5NUN1Uk9hUzBzSWQ3UE0zck5kbG9EZ0g0OXhZRUNsVGZfRlgzM3BLZzRFenl5LWJfQ0paYkJhcFpBYzRFQTgwcE1Kck51bEVZd0pJbGZ4LWZkS202bGt2OC1mbTdBeHVhU3ZQM0MwZWVGSExDRHR6OFUxTmJjNHRiUWxDbHdhLTRzdWZfdC1uU3c?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Michigan Supreme Court rejects permit for Enbridge oil pipeline under Great Lakes</div><div class="meta">AP News · <time datetime="2026-08-01T07:00:00+00:00">Aug 1</time></div></a></li>
-</ul></section>
-<section class="month" id="m-july-2026"><h2>July 2026 <span>43</span></h2><ul>
+</ul><button class="more" hidden></button></section>
+<section class="month" id="m-july-2026"><h2>July 2026 <span>44</span></h2><ul>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxOajBLZEJMWVpubmF1MGNJaVFXYzhNZDd6d2gzV3JwQkZ2dDRYTk5Qdm5hMjZ0NEZ6SFEwclA1VEYyRHBHVjlaZ1g1WVQyTnE3M3FlQ3lpSzZweTBEQVFGbWhBcjRoVXZQV2RacHlRY0ZtZkVYQ0FQamFWMllOTXZrS2xpanY1b1otOHZuY044QnNvUXlraG91S2hpZVF1NUJVZVRiQ2xXTWQ1VnFfOFNONVduWWNNbHJlcEE?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Federal appeals court: Oil pipeline trespassing on Wisconsin tribal land</div><div class="meta">ICT News · <time datetime="2026-07-31T07:00:00+00:00">Jul 31</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxOYzc2ODlxM1BwbzljSDlMVHU0bTVtTWdfUU5GYnZhYzNZTEZLcmdJZ1BzWERndHh6bHRneVZoN0Jrd1UxOGwwY2ZXR204RkxxS1l5RWhCU2REamNUcUYxNTM0LTVVZTlWMV82Z1pPbW83cWVjUUc4V2YySFdkQ01lUDJuSDNfSS1YSExsZzl1dnlZaEpBal9Qc29rQkMwbXlFSU1OQlZLeDVWUktrc0dZT1pWcE85ejQwdlpER04tWXFyQlRHOXVV?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Enbridge pipeline trespassed on Wisconsin tribal land, must be moved, US appeals court finds</div><div class="meta">Reuters · <time datetime="2026-07-30T07:00:00+00:00">Jul 30</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxOQ1ZFZzlmZEVqRjI5NnEyMGJqRFM1RHU5UnFzTUNhRk9yY1IzOWpSODdnZ3NWNGJhVXIwTnFXaEktdjg1RnVwS1NQTW4xWWVuNTNMblIza1RPeDdLR0FiR0UtekRmRXV6dFp4dld0M180SnkwbXU0MVAtZkxwVHF4VXdvWndyR0VVS0N1bFJyS0ItR0VCSVpSNFNHSUpYSlp3UDRKU1plY3I3TUFkNTJUSC1BRURjQTZlTFh6bS10R0dBaXdBd3FObHFDbHRVUzZ4YkhxRFViRkFnb0pxTEtWcDk4WXJ0Umd6UmNwTW5DSkE?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Shareholder Alert - Robbins LLP Informs Investors of the Bloom Energy Corporation Class Action Lawsuit</div><div class="meta">Business Wire · <time datetime="2026-07-30T07:00:00+00:00">Jul 30</time></div></a></li>
@@ -382,6 +401,7 @@
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxQend2UXJadXQxVHlZUEFwWm5ycUZ1enBoZGJXbEY2MC1KLVRtNGtIcmRsOVMwdmdSN2FOTjBvQlpOS0x2RFJseUljeGVaUEh2T1ljVm1RWDVIRklrbFFuOXFzcmVRYkRYOWlZd0JvTGpHanlxcnZ2VmZUQmZmWG8zYmJTQzZxdHRuUVRndWlFUy1PTWMwN01HblhEZERuMXQyNHRraEJBQlFVZ25nNXQ3a1FqYTM?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Dentons Canada advises Energy Fuels on US$1.9B definitive agreement to acquire VAC</div><div class="meta">Dentons · <time datetime="2026-07-13T07:00:00+00:00">Jul 13</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE1kMmthb1k3U3VPMUxuc3d5UE1hSVplcWMwMlZTR1B0cUJ2TEg5clpNZ0xETHJsN1NJaTU2MnpBMU1MQ3JtWjZBUEtRcVdaVUI1V2o5N05IQkVsYlZVM0t0QjFB?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Greenfire Resources completes $1.297 billion acquisition of Connacher Oil and Gas</div><div class="meta">Canadian Lawyer · <time datetime="2026-07-13T07:00:00+00:00">Jul 13</time></div></a></li>
 <li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxNTXYxZGZnbF9HTlp4THF5aHF1YU5pV1VHd1Y4U0kzdDNpU2lGTGZ4OUVnenUxM28xd19JbGNQbllVOVFLMDFpMGw2MUMwNXdubUNwN3NxRlAtdFNoTWRMZ2FwUW82MVlVbWFLd29UX292TmFGcmJaTVBHeU1uUjNQMXhlNThkd2tZU2FzanU1VnVlVl93Tnc?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Surging gas power emissions and policy rollbacks are erasing Canada’s biggest climate win</div><div class="meta">Canada&#x27;s National Observer · <time datetime="2026-07-13T07:00:00+00:00">Jul 13</time></div></a></li>
+<li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxNeU5URnZxVENIYmhzempIYTB0WTR1RHN0dFJ6MGtyY0tsQnB0alpocUduZUpkUW51MngwVTY1a1hvc1Fyc2t6bUwxcm5OZnMwQXZzbTJZMjZtNzExWGJSc1dPUHN2YV9yY0FZOU91X05zSnNTQ0l5SW9VTk0zZXhLMDJoYTFEa2dxS2hOOGV3R1FTWkhocW9QTVRBaW5YMXczQkVpWWN6aFBTcGU3MHVfTml1Y2s5V2x0TWlhVFFNSWJndVowUTl6cjF3ZGNZeW5Lcnd5N0pkWWQ5MWR6NkFQRzFFRQ?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Alberta, Ottawa and top oil producers agree to advance the Pathways carbon capture project</div><div class="meta">The Globe and Mail · <time datetime="2026-07-13T07:00:00+00:00">Jul 13</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxQUm1yVy1saThyV0tJckNtTDZMYlA0NDhvYm5wZFlLWmdERHlYSkQ0UmhTMExkd2EzSWx1dDB2VThYOG9QaU1rOGNKUEhFWjQxcFRDZ21UdU12amk2WmlGMlBuTjlQbFhWS041cC1nbGlmbXAxdmVCczJBVkFra3FZektNUEFFQVkwNWpsV3QtNDBLNVJwbW4wZ0NkS05LYTJwUk9MVERiYm5oOERWd2VUcXB2QUl3cGs?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Norton Rose Fulbright advises lenders on US$730 million green refinancing</div><div class="meta">Energy Global · <time datetime="2026-07-10T07:00:00+00:00">Jul 10</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxQY3BiV1lGQjFjQ1FtRHYwN1NrMWpIQ29xZXVIVWJXNFlyN1c2NF9vcU5jd2hxeXNFVlNiaF9FY3VnWVFFdGplc012VWlaU2NnaXNaT3JENkpnUlh2czBYMDQ5b1hZeERvdEJQMTc0dVRsN0d2LUFHWm02YlFQa2hZMzRYN21MV2pWRTVDXzY4eTFKY2wwa0s5QWFBbm1TSVQwZ3VwT0ZMLWgtdWw5UXc?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">First Nation files court challenge against Burrard Inlet dredging project for oil tankers</div><div class="meta">Daily Hive · <time datetime="2026-07-10T07:00:00+00:00">Jul 10</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxOTkgxeHNaMlpzSDlMU3MzVGZqcV9XcTAtRDI3T1NkWS1uMXg3NXdnSUk3M2tLSWtyQ01EZFRnVXdGbVlqb1gtd1g4dmxvWTlYSjk0eHN6bmdYcnZzZVI0TzhhenZMc25xNVFhWEJ6a1JwNHZ4STBxRDFCSktyTjE1endIbUNidDlTN0NmRnZZdkdkN3B5MzJuWmFyMVhsa1ZzWUpiLQ?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Kansas winter storm gas price challenge thrown out by appeals court</div><div class="meta">Oklahoma Energy Today · <time datetime="2026-07-09T07:00:00+00:00">Jul 9</time></div></a></li>
@@ -391,7 +411,7 @@
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPeS1wWU4tTTJMVGZ1TWVtSDRqU3Z1d1BtQnVuQnFKNHBGeUI5eHhWVWJpcHljcTRtbkNlZ2JsaldTbGhTR3JzSjVhMVRRR0lSX2dmOEJmTC1NaldrOTdVRlhpOTBPQXAyem8tQmtpdTdvY0NPV3NPb1lRYmdqUU41TklOVm83bEhGdzRhTWtyWFJWS01aeWZLV09GclpocE9OY29fTWk0TllYWlkzX1pCSkJqQk1zTS0tWVBvR0Q4SQ?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">City, Sarai passed to BC Utilities Commission in fight for clarity on Kamloops gas prices</div><div class="meta">CFJC Today Kamloops · <time datetime="2026-07-06T07:00:00+00:00">Jul 6</time></div></a></li>
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxPSGJ6NXFSaTJDRk9LbExuX1RaLWpmSldtZHhPaFpWUUpGYncyXzdyMTdjWjY4cHNLVlNOamRuNmtOX0R6by1SMlFqQW1ZTG9yaUpUQVp6b0RwbVNIeEpzZV9uMGNjZHlka3p2N3BYd002SUpMc2E2WjhtZlFtcFBMUmgtS1cycjRVOVRwMW1PT2o1eVJiUkhKcndPTEV2QzVwU1lqTkQwZENIckE1WTZINjczSWtXZw?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">SaskPower gets federal approval to build U.S. power lines, quadrupling grid capacity</div><div class="meta">650 CKOM · <time datetime="2026-07-05T07:00:00+00:00">Jul 5</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi_gFBVV95cUxPMGxOa1NyRldCN2FPc3hQZXZJNUZwX3A5Y3lQMmJjaDA5Z1BNQ3VScS02QjJIQmJ0c1lzbUY0NUlQNzctcE9NN2h3aTN3dHRKU3ZSaV93M0ZWZXR0ZFcydDdRMXBmNDlYUi05NnkweHc5MHB3RmJDWGhsYVhVWm5pUlpmV2FfanU5dEdlUTQ3Q1pnT1RsUFFfNGJTclZhZlJSVkd5X245TXlpMjRBUzVPRlN2VWVDdkZzUjBOTDEta21ZakluN2JqQThWY0hoazJRRzB1M3hHZHlQOVZaeXlSQ2FBLTJUQkw0N3dsb1daSjNaYzNaR2pDanBpc2tSQQ?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Dentons in Africa named Environment Energy and Natural Resources Law Firm of the Year 2026</div><div class="meta">Dentons · <time datetime="2026-07-01T07:00:00+00:00">Jul 1</time></div></a></li>
-</ul></section>
+</ul><button class="more" hidden></button></section>
 <section class="month" id="m-june-2026"><h2>June 2026 <span>41</span></h2><ul>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxPMy1IbFV6Z2ozLWRBaGZlR3YwbUNlanZ3X01GdVp5cEJKSlR0eENvbVBCYnFXZmpyRHZSLTFUUUtGMi0tQ0U3dEpwRTJPaEl6WlNQamRmRWtpbWhtck9qSDJweTFGWlN4dlA1SmI0ZnJ2NEJkZGlSQjI4cGZRendXWlFBT3lqNnFOeGJwUmhLUVV2ck9uR0VpUXFiQzlUVTJBUzlhazVObzZma0duMU1IOHBWN3RQRGczLWc?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Dentons advises Pathfinder Clean Energy on €100 million convertible bond investment</div><div class="meta">Dentons · <time datetime="2026-06-30T07:00:00+00:00">Jun 30</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxPeV82THpZRUgxQlJuQ2F6MmpVNWZ4S3Q4MFZZaDV5SS1iZzBkMWFGT3Y3OTR3VHFwcFhNcTFnTWljM21Way0xeTdQYUJDVzdEV2RKZUVVcF9lZ0hkVEY2cTFneC1sNFpjZ0YwT3Z1LVJWaHFJY3VBU1VGVUJHaW94b3dmWWZDanI5WVNfcWtpZ3p0bDBYc0JNX09kSzRWY1pOVkFmdVpoS3JQRExxTVZDaVg2S1hCS3RHNU54dFJweGcxRHdXU0ZjVnQzU3BMeGlfVWpxUkktSmNhVEg5N0xfcGZaVjFnb05lbi1IODAyUi0?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Dentons advises AP Pension on financing of solar photovoltaic projects in Poland</div><div class="meta">Dentons · <time datetime="2026-06-29T07:00:00+00:00">Jun 29</time></div></a></li>
@@ -434,7 +454,7 @@
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxOeldVSVV3YmdtbEQ1MUc2eWFseEdjdFJWanFkdmNsdTBZdDZDU3g3UW5MVW02aE1KM2dLd1BMZ2xCWFNsZXdpLVl1NlU0U2FlVnhqUU9GOWlrX0tZWHk2eVV1aVZmSGlFd1B1QXlKUWxmaXlpaVpSelRqZU5xRldKc1dlalBYbUs2eVFHNUFxenlhYWtaVUsyNExhbjNnem1HUGNERUpCTmJBOURhTnZVQ2xhNVUweEFZZ1pab2E0OHkzYl9WN0JoUGNjb0JaUUotYlR5ZzhSSlZ5eXdSLTJKUUFNcw?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">DC Advisory advises the shareholders of Camlin Group on its sale to Siemens Energy</div><div class="meta">DC Advisory · <time datetime="2026-06-03T07:00:00+00:00">Jun 3</time></div></a></li>
 <li data-topic="courts---litigation"><a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxPN3kyWFp6UkE5U3dJMnUtdl9ZWWRORmZwQnd6UEZZVGdCY1A1dzltTlNhZzhjcVJOLXVqNUVWNm56VjRBd0NCaV80YTN2TGhwUjIzbHcya0QtN21obXhNQTdZMDE1R3Z3WFZ0ZlRWY2tZcFhjejdNeklKSzNfbUl3aTNLeHp3T05jZzdnY05rMjRueXdJYnVJb1BJVVJ3RG1XZ3hDTmJtZ0NOUWl6djY0di0ybi0?oc=5" target="_blank" rel="noopener"><div class="tag">Courts &amp; Litigation</div><div class="headline">Appeals Court Upholds First Nation Victory Against Chalk River Nuclear Waste Project</div><div class="meta">The Energy Mix · <time datetime="2026-06-02T07:00:00+00:00">Jun 2</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxPNllMVlpXdFd1Z2ozbjdwOHBpWS14bTBkY2l0SFU2UlB2VTl0VVA4NEg4aXVtQXI4MW9ONWFueFB2aDFKcmNncUZ3Q1lKTkZSOVpRS21WcGgxaXhiVE5GYW1JdGs4enhQajlKT0ZWek13RWdtRldpcjVGVnZiczdHbk5XRkxfVjk4SXJyczRpNklKbTU2aUtjU3FiR05EU3M5ZUtmaTZISUF3OGlndDkwNA?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">RWT Capital Advises H2Oil Energy Sale to GFL as Canada’s Energy M&amp;A Market Heats Up</div><div class="meta">EnergyNow · <time datetime="2026-06-01T07:00:00+00:00">Jun 1</time></div></a></li>
-</ul></section>
+</ul><button class="more" hidden></button></section>
 <section class="month" id="m-may-2026"><h2>May 2026 <span>64</span></h2><ul>
 <li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxPdjllODE4MFp2RVJNYXpQcGNGTDF1a0dNdTQtWXRrTnI1ZlE3TkxPVjI3OUZqRTBsM3J0NTh4RVk3QjI2SHlrRkdlYm9rYU5Nd0syNGxRWnlqQTJFeWlaVDEyQ1hqTF9ZZ2lyUFJlVGxZNVhKQ1hReTVXdGswektsUlE4QnFWUVZoRWJFSzhFdjMxWTI0aDduVGdha24yRFpMeFIzLXZvS0xKQUlFVl9SLXdndnJRTm1MUTBoeUhQaFo?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Ottawa under increasing pressure to show how policy changes are affecting emissions</div><div class="meta">CityNews Toronto · <time datetime="2026-05-30T07:00:00+00:00">May 30</time></div></a></li>
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxPekhMSEJ1X0szUnNyY19JT3NlTG1GY2lRcml1RGxXSEhsa0dEcTRoeld5ZE9SMWRZcDdWUUF1UXZaVkR6ZXFWVS1RaW10OEx3V2JCSGNqTjdOdFJXNmdQQmN3cHJtUkg5WWhMVmUxYlhJQndWNFE0YmpJTDIteHpZVjFOQUY0Z3c?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">Regulator investigating 95 dead birds at Suncor site north of Fort McMurray</div><div class="meta">CBC · <time datetime="2026-05-29T07:00:00+00:00">May 29</time></div></a></li>
@@ -500,7 +520,7 @@
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPcFoybVhZNllqcWZNRTNUMmhNS21LNVV5WDZBQXNZaW1kYjVrLUIxUFRRaVJzSjFzNkxjS3NScHY4OHhMbUllN0RCU2RGVzJhd0xpRVQ4LU5HaDMwVkNZcTZpLWZNSUR1eFlvelhHdmJITGNwaTA5aDkzMmpwQUlZRkdpY3luQ0kwdnBOeG1qQlNvLUttRnFmZl8ySUNaTEZ3cDVVWmxKZFk4a0VC?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Closer to the Heart – Shell’s ARC Resources Deal Affirms Focus on Low-Carbon LNG, Liquids Growth</div><div class="meta">RBN Energy · <time datetime="2026-05-04T07:00:00+00:00">May 4</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxOa0hGX24zSnZNVjRuSHowSERmd3g2OTRHTEItVi1SM1lpRkxoeURYTERkQnNmRjdKeEJMRi1YNENXSXNtVE8tMldVWkcxUXVQM3pHdlVFdlVGeEEweExaUlZELWx6ZUhjZmplbm8zZDUtRGhLRFJoSHNibEt5SnZPLTFsVS1qTFU5WEE0TFpITXY1YXNnWVdKZTloRG92dU9sLU1jTEtmNmYwdG1LdGc?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Dentons Canada advises Enbridge on federal approval of $4B Sunrise Expansion Program in British Columbia</div><div class="meta">Dentons · <time datetime="2026-05-01T07:00:00+00:00">May 1</time></div></a></li>
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMiqgFBVV95cUxObVBPS241cnU2a2I2YnJLM3c2dHZoUUpmSGdOYUZaenNLaDFWQl91R2tHM2I5SUp3SXRib0xNQ25wbEdPTHUxVTJ4eVFCNnFWQ1RKcUVlX3JIRjhlcmVOdlhNbzExUmxQNjdROVBrU25HYVA0Q3ppaDBBU0JJa1o0eWxsbTMtVHJ6ZTZ1amNFX0hINzRvT3o5M0ZIOHJ6d0VoNy1yNmZBbDZ1QQ?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">B.C. Utilities Commission collecting input on Okanagan’s energy situation</div><div class="meta">Oak Bay News · <time datetime="2026-05-01T07:00:00+00:00">May 1</time></div></a></li>
-</ul></section>
+</ul><button class="more" hidden></button></section>
 <section class="month" id="m-april-2026"><h2>April 2026 <span>40</span></h2><ul>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxPTGs4RnNsUHpaTERrb0tUek1rSjJCSldHQ0txNUtONE5CcmJud0tzdVRxZldScko4X205QVo3NzEya3ltYVdDRjRLc3h0MFpUOTdXM0pZWEtTWlozam1XYzhOZVk5Y3JabVR4NmNhXzd5U1cxOFpqdFlNOGk0dndpS2s5RVNzb3F2UmZQTHREWUNSVlM2V3RCSXdudkJmZXhJQnc?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">The subtle influence of energy efficiency</div><div class="meta">Dentons · <time datetime="2026-04-30T07:00:00+00:00">Apr 30</time></div></a></li>
 <li data-topic="regulators---decisions"><a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxQV2lLQnB1bG9pLWJZRTVBMGtDcFJIR0dUX0xLaHVtTkNvaDE0YkNRV0lLUXk5QTJFNHpRalFfTFd5ZWdFS05mYzFmLVRsOW1makExczVhQnZmSGFjM3F5NWxVUDh6ZHQ1WGx1cnBLNTN3OXVxWDFxb1lhNFczRUE0WmZZdlc0VFdoQ0xtQ25aYjFTeFJ1ZDhWVDRzdm9oa2xFN1BVX2x6R3gxeHVzY1E?oc=5" target="_blank" rel="noopener"><div class="tag">Regulators &amp; Decisions</div><div class="headline">After Sunrise: Federal approval and CER conditions on the Westcoast Energy expansion</div><div class="meta">Borden Ladner Gervais LLP (BLG) · <time datetime="2026-04-30T07:00:00+00:00">Apr 30</time></div></a></li>
@@ -542,37 +562,78 @@
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQQ3k2cmF2aXZVRHAzV3YzZ3o0bTVRZ0NTd2hrUGttU3JsQUNubmpGb0dwZVZKdzJLN19hOFFRYnN2M0lBZkVlRzFtZDlVUFRtWFJXOEJRUThBa0c5WGRiUk5FV3FBSUdlSF9oMUJ4ZVpuVWotaWJsWmh3bUdvb3Qzd2lLTUIyTE1fdlhGZ2FLMkkzVTAwMDBKM09aUkZlb1BrQkljOGx0NElfbi1qODhucnNTV2VtUEQzRUJmcFhRVG9yTHhCX3FLVHVkTQ?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Norton Rose Fulbright advises lenders on approx. PLN 2.3 billion (EUR 546 million) financing of 562 MW CCGT power plant in Poland</div><div class="meta">Norton Rose Fulbright · <time datetime="2026-04-16T18:34:08+00:00">Apr 16</time></div></a></li>
 <li data-topic="deals---law-firms"><a href="https://news.google.com/rss/articles/CBMi_AFBVV95cUxOSkJzMTJjdzFOZG9yU1J1RlRkZnlnV0NqRno1Y2lIVEFDZlFrSU84N3VobkpySkZqTDZPOXdST1ZSSWMzWmlFVHU3NVluWUliLVpyamZ4Y05KRWxYSGNKTG9XOGw4Sm9IN21vaXo0OGFLbVN2aTFpTmtGTlc3VW04ZzMwbjlvdnBTRTZqYk9UcVZPWkdNVkJObUZtajZQM0x4b0xORkFzY3VQd0xLM3lZMG9tZ0hnRG5NSmgzN1BsWS1DRFlJODZXLUMwU1ZucUZuTGlXNFdXNUsxWkRCb01vamt1VTRwVWdnMi1SLV9jNGdxWmtqRkh3dVNLQms?oc=5" target="_blank" rel="noopener"><div class="tag">Deals &amp; Law Firms</div><div class="headline">Small modular reactors: A new energy boost for the Netherlands</div><div class="meta">Dentons · <time datetime="2026-04-16T07:00:00+00:00">Apr 16</time></div></a></li>
 <li data-topic="legislation---policy"><a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQbm0xUE1zRkxCRkF4U1NXRWZvamdGNGhrUDBYWGpsYlRHOXZ4blFaaFZvT21JVnhlNjBrb2tXOU5SZ1pwbDhkV2Y2bnpDbGtTaWVaRVNwM21ocUJNT3VEV0xJNFZ3R01JdVJRelNCU1N3UDAzaWt2N3p5cTU4YXZpbjMyOWVIRy14azRMSEk3QnBGZUdiQkhvNEVNNFp1YnM?oc=5" target="_blank" rel="noopener"><div class="tag">Legislation &amp; Policy</div><div class="headline">Ford’s latest bill collides with cities’ efforts to phase out gas in buildings</div><div class="meta">Canada&#x27;s National Observer · <time datetime="2026-04-16T07:00:00+00:00">Apr 16</time></div></a></li>
-</ul></section>
+</ul><button class="more" hidden></button></section>
 <p class="empty" id="none" hidden>No stories for this topic in the past six months.</p>
 <footer>Headlines link to the original publishers. Refreshed every morning.</footer>
 </main>
 <script>
-  // Topic filters: show only one topic's stories, or all of them.
+  // Topic filters + "Show more": each month shows its newest stories first.
+  const LIMIT = 8;
   const buttons = document.querySelectorAll(".filters button");
-  function pick(topic) {
-    buttons.forEach(b => b.setAttribute("aria-pressed", b.dataset.topic === topic));
+  const expanded = new Set();
+  let current = "all";
+
+  function render() {
     let any = false;
     document.querySelectorAll(".month").forEach(m => {
+      const items = Array.from(m.querySelectorAll("li"));
+      const match = items.filter(li => current === "all" || li.dataset.topic === current);
+      // Don't hide just one or two stories behind a button.
+      const limit = match.length <= LIMIT + 2 ? match.length : LIMIT;
+      const open = expanded.has(m.id);
       let shown = 0;
-      m.querySelectorAll("li").forEach(li => {
-        const show = topic === "all" || li.dataset.topic === topic;
+      items.forEach(li => {
+        const pos = match.indexOf(li);
+        const show = pos !== -1 && (open || pos < limit);
         li.hidden = !show;
         li.classList.toggle("first-visible", show && shown === 0);
         if (show) shown++;
       });
-      m.hidden = shown === 0;
+      const empty = match.length === 0;
+      m.hidden = empty;
+      m.querySelector("h2 span").textContent = match.length;
+      const btn = m.querySelector(".more");
+      const extra = match.length - limit;
+      btn.hidden = !open && extra <= 0;
+      btn.textContent = open ? "Show less" : "Show more";
       const link = document.querySelector('.jump a[href="#' + m.id + '"]');
-      if (link) link.hidden = shown === 0;
-      m.querySelector("h2 span").textContent = shown;
-      if (shown) any = true;
+      if (link) link.hidden = empty;
+      const opt = document.querySelector('.jump-select option[value="' + m.id + '"]');
+      if (opt) { opt.hidden = empty; opt.disabled = empty; }
+      if (!empty) any = true;
     });
     document.getElementById("none").hidden = any;
+  }
+
+  function pick(topic) {
+    current = topic;
+    expanded.clear();
+    buttons.forEach(b => b.setAttribute("aria-pressed", b.dataset.topic === topic));
+    render();
     try { localStorage.setItem("topic", topic); } catch (e) {}
   }
+
   buttons.forEach(b => b.addEventListener("click", () => { pick(b.dataset.topic); window.scrollTo(0, 0); }));
+
+  document.querySelectorAll(".month .more").forEach(btn => btn.addEventListener("click", () => {
+    const m = btn.closest(".month");
+    if (expanded.has(m.id)) {
+      expanded.delete(m.id); render(); m.scrollIntoView();
+    } else {
+      expanded.add(m.id); render();
+    }
+  }));
+
+  const jumpSelect = document.querySelector(".jump-select");
+  if (jumpSelect) jumpSelect.addEventListener("change", () => {
+    const m = document.getElementById(jumpSelect.value);
+    if (m) m.scrollIntoView({ behavior: "smooth" });
+    jumpSelect.value = "";
+  });
+
   let saved = null;
   try { saved = localStorage.getItem("topic"); } catch (e) {}
-  if (saved && document.querySelector('.filters button[data-topic="' + saved + '"]')) pick(saved);
+  pick(saved && document.querySelector('.filters button[data-topic="' + saved + '"]') ? saved : "all");
 
   // Recent stories show "3h ago"; older ones keep their date.
   const now = Date.now();
