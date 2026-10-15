@@ -305,7 +305,7 @@ PAGE = """<!doctype html>
   .filters .n {{ font-weight: 500; opacity: .75; }}
   main {{ max-width: 680px; margin: 0 auto; padding: 4px 16px calc(env(safe-area-inset-bottom) + 32px); }}
   h2 {{
-    font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 16px; font-weight: 700;
     color: var(--muted); margin: 22px 0 8px;
   }}
   h2 span {{ color: var(--accent); }}
@@ -316,8 +316,8 @@ PAGE = """<!doctype html>
   li.first-visible {{ border-top: 0; }}
   li a {{ display: block; padding: 12px 14px; color: inherit; text-decoration: none; }}
   li a:active {{ background: var(--accent-soft); }}
-  .tag {{ display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em;
-         text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }}
+  .tag {{ display: inline-block; font-size: 13px; font-weight: 700;
+         color: var(--accent); margin-bottom: 2px; }}
   .headline {{ font-weight: 600; }}
   .meta {{ margin-top: 3px; font-size: 13px; color: var(--muted); }}
   .empty {{ margin-top: 24px; padding: 14px; color: var(--muted); text-align: center; }}
@@ -399,7 +399,7 @@ def build_page(items: list[dict], now: datetime) -> str:
     for name in SECTIONS:
         n = sum(1 for a in items if a["section"] == name)
         filters.append(f'<button data-topic="{slug(name)}" aria-pressed="false">'
-                       f'{esc(name)} <span class="n">{n}</span></button>')
+                       f'{esc(name.title())} <span class="n">{n}</span></button>')
 
     # One block per month, newest first (items are already sorted newest first)
     by_month: dict[str, list[dict]] = {}
@@ -417,7 +417,7 @@ def build_page(items: list[dict], now: datetime) -> str:
             rows.append(
                 f'<li data-topic="{slug(a["section"])}">'
                 f'<a href="{esc(a["link"])}" target="_blank" rel="noopener">'
-                f'<div class="tag">{esc(a["section"])}</div>'
+                f'<div class="tag">{esc(a["section"].title())}</div>'
                 f'<div class="headline">{esc(a["title"])}</div>'
                 f'<div class="meta">{" · ".join(meta)}</div></a></li>'
             )
