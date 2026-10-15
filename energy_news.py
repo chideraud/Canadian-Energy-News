@@ -265,17 +265,17 @@ PAGE = """<!doctype html>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Energy Law">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#14171a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f0e6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
 <style>
   :root {{
-    --bg: #f6f4ef; --card: #ffffff; --text: #1d2124; --muted: #6b7075;
-    --line: #e4e0d8; --accent: #c2410c; --accent-soft: #fbe9df;
+    --bg: #f5f0e6; --card: #fffdf8; --text: #141414; --muted: #6e675c;
+    --line: #e2dacb; --accent: #b3261e; --accent-soft: #f6e1dc;
   }}
   @media (prefers-color-scheme: dark) {{
     :root {{
-      --bg: #14171a; --card: #1d2125; --text: #ecebe8; --muted: #9a9fa5;
-      --line: #2c3136; --accent: #fb923c; --accent-soft: #3a2518;
+      --bg: #111111; --card: #1b1b1a; --text: #f5f0e6; --muted: #a39d92;
+      --line: #2c2b29; --accent: #ef5a4c; --accent-soft: #3b1714;
     }}
   }}
   * {{ box-sizing: border-box; }}
@@ -289,7 +289,10 @@ PAGE = """<!doctype html>
     padding: calc(env(safe-area-inset-top) + 14px) 16px 12px;
     border-bottom: 1px solid var(--line);
   }}
-  h1 {{ margin: 0; font-size: 22px; letter-spacing: -0.01em; }}
+  .brand {{ display: flex; align-items: center; gap: 10px; }}
+  .brand img {{ width: 34px; height: 34px; border-radius: 8px; flex: none;
+                box-shadow: 0 0 0 1px var(--line); }}
+  h1 {{ margin: 0; font: 700 23px/1.15 Georgia, "Times New Roman", serif; letter-spacing: -0.01em; }}
   .updated {{ margin: 2px 0 12px; color: var(--muted); font-size: 13px; }}
   .filters {{ display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 0 16px;
              scrollbar-width: none; }}
@@ -305,7 +308,7 @@ PAGE = """<!doctype html>
   .filters .n {{ font-weight: 500; opacity: .75; }}
   main {{ max-width: 680px; margin: 0 auto; padding: 4px 16px calc(env(safe-area-inset-bottom) + 32px); }}
   h2 {{
-    font-size: 16px; font-weight: 700;
+    font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
     color: var(--muted); margin: 22px 0 8px;
   }}
   h2 span {{ color: var(--accent); }}
@@ -316,19 +319,59 @@ PAGE = """<!doctype html>
   li.first-visible {{ border-top: 0; }}
   li a {{ display: block; padding: 12px 14px; color: inherit; text-decoration: none; }}
   li a:active {{ background: var(--accent-soft); }}
-  .tag {{ display: inline-block; font-size: 13px; font-weight: 700;
-         color: var(--accent); margin-bottom: 2px; }}
+  .tag {{ display: inline-block; font-size: 12px; font-weight: 700;
+         text-transform: uppercase; letter-spacing: .06em;
+         color: var(--accent); margin-bottom: 3px; }}
   .headline {{ font-weight: 600; }}
   .meta {{ margin-top: 3px; font-size: 13px; color: var(--muted); }}
   .empty {{ margin-top: 24px; padding: 14px; color: var(--muted); text-align: center; }}
   footer {{ margin-top: 28px; font-size: 12px; color: var(--muted); text-align: center; }}
+  .jump {{ display: none; }}
+  .month {{ scroll-margin-top: 140px; }}
+
+  /* Mouse and keyboard niceties */
+  @media (hover: hover) {{
+    li a:hover {{ background: var(--accent-soft); }}
+    li a:hover .headline {{ text-decoration: underline; text-underline-offset: 3px;
+                             text-decoration-thickness: 1px; }}
+    .filters button:hover {{ color: var(--text); }}
+  }}
+  a:focus-visible, button:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
+
+  /* Computer screens: sidebar on the left, stories on the right */
+  @media (min-width: 900px) {{
+    body {{ display: grid; grid-template-columns: 270px minmax(0, 720px);
+           justify-content: center; column-gap: 48px; padding: 0 32px; }}
+    header {{ position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+             padding: 40px 0 24px; border-bottom: 0; background: transparent; }}
+    .brand img {{ width: 40px; height: 40px; border-radius: 9px; }}
+    h1 {{ font-size: 25px; }}
+    .updated {{ margin: 8px 0 26px; }}
+    .filters {{ flex-direction: column; gap: 4px; overflow: visible; margin: 0; padding: 0; }}
+    .filters button {{ display: flex; justify-content: space-between; align-items: center;
+                      width: 100%; text-align: left; border-color: transparent;
+                      background: transparent; border-radius: 10px; padding: 9px 12px; font-size: 15px; }}
+    .filters button[aria-pressed="true"] {{ background: var(--accent-soft); }}
+    .jump {{ display: block; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }}
+    .jump p {{ margin: 0 0 8px 12px; font-size: 12px; font-weight: 700; letter-spacing: .06em;
+              text-transform: uppercase; color: var(--muted); }}
+    .jump a {{ display: block; padding: 6px 12px; border-radius: 8px; font-size: 14px;
+              color: var(--muted); text-decoration: none; }}
+    .jump a:hover {{ color: var(--text); background: var(--card); }}
+    .jump a[hidden] {{ display: none; }}
+    main {{ max-width: none; margin: 0; padding: 28px 0 48px; }}
+    .month {{ scroll-margin-top: 24px; }}
+    li a {{ padding: 14px 18px; }}
+    .headline {{ font-size: 17px; }}
+  }}
 </style>
 </head>
 <body>
 <header>
-  <h1>{title}</h1>
+  <div class="brand"><img src="icon-192.png" alt=""><h1>{title}</h1></div>
   <p class="updated">Updated {updated}</p>
   <div class="filters">{filters}</div>
+  <nav class="jump" aria-label="Jump to month"><p>Jump to</p>{jump}</nav>
 </header>
 <main>
 {months}
@@ -350,6 +393,8 @@ PAGE = """<!doctype html>
         if (show) shown++;
       }});
       m.hidden = shown === 0;
+      const link = document.querySelector('.jump a[href="#' + m.id + '"]');
+      if (link) link.hidden = shown === 0;
       m.querySelector("h2 span").textContent = shown;
       if (shown) any = true;
     }});
@@ -407,8 +452,10 @@ def build_page(items: list[dict], now: datetime) -> str:
         key = a["published"].astimezone(LOCAL_TZ).strftime("%B %Y")
         by_month.setdefault(key, []).append(a)
 
-    months = []
+    months, jump = [], []
     for label, group in by_month.items():
+        mid = "m-" + slug(label)
+        jump.append(f'<a href="#{mid}">{esc(label)}</a>')
         rows = []
         for a in group:
             meta = [esc(a["source"])] if a["source"] else []
@@ -421,7 +468,7 @@ def build_page(items: list[dict], now: datetime) -> str:
                 f'<div class="headline">{esc(a["title"])}</div>'
                 f'<div class="meta">{" · ".join(meta)}</div></a></li>'
             )
-        months.append(f'<section class="month"><h2>{esc(label)} <span>{len(group)}</span></h2>'
+        months.append(f'<section class="month" id="{mid}"><h2>{esc(label)} <span>{len(group)}</span></h2>'
                       f'<ul>\n' + "\n".join(rows) + "\n</ul></section>")
     if not months:
         months.append('<p class="empty">No stories yet. Check back after the next update.</p>')
@@ -431,6 +478,7 @@ def build_page(items: list[dict], now: datetime) -> str:
         updated=esc(fmt_updated(now)),
         filters="".join(filters),
         months="\n".join(months),
+        jump="".join(jump),
     )
 
 # ---------------------------------------------------------------------------
