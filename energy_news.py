@@ -293,7 +293,23 @@ PAGE = """<!doctype html>
   .brand img {{ width: 34px; height: 34px; border-radius: 8px; flex: none;
                 box-shadow: 0 0 0 1px var(--line); }}
   h1 {{ margin: 0; font: 700 23px/1.15 Georgia, "Times New Roman", serif; letter-spacing: -0.01em; }}
-  .updated {{ margin: 2px 0 12px; color: var(--muted); font-size: 13px; }}
+  .subrow {{ display: flex; align-items: center; justify-content: space-between; gap: 12px;
+             margin: 4px 0 12px; }}
+  .updated {{ margin: 0; color: var(--muted); font-size: 13px; }}
+  .jump-select {{
+    -webkit-appearance: none; appearance: none; flex: none; max-width: 52%;
+    border: 1px solid var(--line); border-radius: 999px; background-color: var(--card);
+    color: var(--text); font: 600 13px/1.2 inherit; font-family: inherit;
+    padding: 6px 28px 6px 12px; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8378' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 11px center;
+  }}
+  .more {{
+    display: block; width: 100%; margin-top: 8px; padding: 11px; border-radius: 12px;
+    border: 1px solid var(--line); background: transparent; color: var(--accent);
+    font: 600 14px/1.2 inherit; font-family: inherit; cursor: pointer;
+  }}
+  .more[hidden] {{ display: none; }}
   .filters {{ display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 0 16px;
              scrollbar-width: none; }}
   .filters::-webkit-scrollbar {{ display: none; }}
@@ -305,13 +321,13 @@ PAGE = """<!doctype html>
   .filters button[aria-pressed="true"] {{
     background: var(--accent-soft); border-color: transparent; color: var(--accent);
   }}
-  .filters .n {{ font-weight: 500; opacity: .75; }}
+  .filters .n {{ display: none; }}  /* story counts hidden; remove this line to show them */
   main {{ max-width: 680px; margin: 0 auto; padding: 4px 16px calc(env(safe-area-inset-bottom) + 32px); }}
   h2 {{
     font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
     color: var(--muted); margin: 22px 0 8px;
   }}
-  h2 span {{ color: var(--accent); }}
+  h2 span {{ display: none; }}  /* story counts hidden; remove this line to show them */
   .month[hidden], li[hidden] {{ display: none; }}
   ul {{ list-style: none; margin: 0; padding: 0; background: var(--card);
        border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }}
@@ -335,6 +351,7 @@ PAGE = """<!doctype html>
     li a:hover .headline {{ text-decoration: underline; text-underline-offset: 3px;
                              text-decoration-thickness: 1px; }}
     .filters button:hover {{ color: var(--text); }}
+    .more:hover {{ background: var(--card); }}
   }}
   a:focus-visible, button:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
 
@@ -346,7 +363,8 @@ PAGE = """<!doctype html>
              padding: 40px 0 24px; border-bottom: 0; background: transparent; }}
     .brand img {{ width: 40px; height: 40px; border-radius: 9px; }}
     h1 {{ font-size: 25px; }}
-    .updated {{ margin: 8px 0 26px; }}
+    .subrow {{ margin: 8px 0 26px; }}
+    .jump-select {{ display: none; }}
     .filters {{ flex-direction: column; gap: 4px; overflow: visible; margin: 0; padding: 0; }}
     .filters button {{ display: flex; justify-content: space-between; align-items: center;
                       width: 100%; text-align: left; border-color: transparent;
@@ -369,7 +387,8 @@ PAGE = """<!doctype html>
 <body>
 <header>
   <div class="brand"><img src="icon-192.png" alt=""><h1>{title}</h1></div>
-  <p class="updated">Updated {updated}</p>
+  <div class="subrow"><p class="updated">Updated {updated}</p>
+    <select class="jump-select" aria-label="Jump to month"><option value="">Jump to month</option>{jump_options}</select></div>
   <div class="filters">{filters}</div>
   <nav class="jump" aria-label="Jump to month"><p>Jump to</p>{jump}</nav>
 </header>
@@ -379,32 +398,73 @@ PAGE = """<!doctype html>
 <footer>Headlines link to the original publishers. Refreshed every morning.</footer>
 </main>
 <script>
-  // Topic filters: show only one topic's stories, or all of them.
+  // Topic filters + "Show more": each month shows its newest stories first.
+  const LIMIT = 8;
   const buttons = document.querySelectorAll(".filters button");
-  function pick(topic) {{
-    buttons.forEach(b => b.setAttribute("aria-pressed", b.dataset.topic === topic));
+  const expanded = new Set();
+  let current = "all";
+
+  function render() {{
     let any = false;
     document.querySelectorAll(".month").forEach(m => {{
+      const items = Array.from(m.querySelectorAll("li"));
+      const match = items.filter(li => current === "all" || li.dataset.topic === current);
+      // Don't hide just one or two stories behind a button.
+      const limit = match.length <= LIMIT + 2 ? match.length : LIMIT;
+      const open = expanded.has(m.id);
       let shown = 0;
-      m.querySelectorAll("li").forEach(li => {{
-        const show = topic === "all" || li.dataset.topic === topic;
+      items.forEach(li => {{
+        const pos = match.indexOf(li);
+        const show = pos !== -1 && (open || pos < limit);
         li.hidden = !show;
         li.classList.toggle("first-visible", show && shown === 0);
         if (show) shown++;
       }});
-      m.hidden = shown === 0;
+      const empty = match.length === 0;
+      m.hidden = empty;
+      m.querySelector("h2 span").textContent = match.length;
+      const btn = m.querySelector(".more");
+      const extra = match.length - limit;
+      btn.hidden = !open && extra <= 0;
+      btn.textContent = open ? "Show less" : "Show more";
       const link = document.querySelector('.jump a[href="#' + m.id + '"]');
-      if (link) link.hidden = shown === 0;
-      m.querySelector("h2 span").textContent = shown;
-      if (shown) any = true;
+      if (link) link.hidden = empty;
+      const opt = document.querySelector('.jump-select option[value="' + m.id + '"]');
+      if (opt) {{ opt.hidden = empty; opt.disabled = empty; }}
+      if (!empty) any = true;
     }});
     document.getElementById("none").hidden = any;
+  }}
+
+  function pick(topic) {{
+    current = topic;
+    expanded.clear();
+    buttons.forEach(b => b.setAttribute("aria-pressed", b.dataset.topic === topic));
+    render();
     try {{ localStorage.setItem("topic", topic); }} catch (e) {{}}
   }}
+
   buttons.forEach(b => b.addEventListener("click", () => {{ pick(b.dataset.topic); window.scrollTo(0, 0); }}));
+
+  document.querySelectorAll(".month .more").forEach(btn => btn.addEventListener("click", () => {{
+    const m = btn.closest(".month");
+    if (expanded.has(m.id)) {{
+      expanded.delete(m.id); render(); m.scrollIntoView();
+    }} else {{
+      expanded.add(m.id); render();
+    }}
+  }}));
+
+  const jumpSelect = document.querySelector(".jump-select");
+  if (jumpSelect) jumpSelect.addEventListener("change", () => {{
+    const m = document.getElementById(jumpSelect.value);
+    if (m) m.scrollIntoView({{ behavior: "smooth" }});
+    jumpSelect.value = "";
+  }});
+
   let saved = null;
   try {{ saved = localStorage.getItem("topic"); }} catch (e) {{}}
-  if (saved && document.querySelector('.filters button[data-topic="' + saved + '"]')) pick(saved);
+  pick(saved && document.querySelector('.filters button[data-topic="' + saved + '"]') ? saved : "all");
 
   // Recent stories show "3h ago"; older ones keep their date.
   const now = Date.now();
@@ -452,10 +512,11 @@ def build_page(items: list[dict], now: datetime) -> str:
         key = a["published"].astimezone(LOCAL_TZ).strftime("%B %Y")
         by_month.setdefault(key, []).append(a)
 
-    months, jump = [], []
+    months, jump, options = [], [], []
     for label, group in by_month.items():
         mid = "m-" + slug(label)
         jump.append(f'<a href="#{mid}">{esc(label)}</a>')
+        options.append(f'<option value="{mid}">{esc(label)}</option>')
         rows = []
         for a in group:
             meta = [esc(a["source"])] if a["source"] else []
@@ -469,7 +530,8 @@ def build_page(items: list[dict], now: datetime) -> str:
                 f'<div class="meta">{" · ".join(meta)}</div></a></li>'
             )
         months.append(f'<section class="month" id="{mid}"><h2>{esc(label)} <span>{len(group)}</span></h2>'
-                      f'<ul>\n' + "\n".join(rows) + "\n</ul></section>")
+                      f'<ul>\n' + "\n".join(rows) + "\n</ul>"
+                      '<button class="more" hidden></button></section>')
     if not months:
         months.append('<p class="empty">No stories yet. Check back after the next update.</p>')
 
@@ -479,6 +541,7 @@ def build_page(items: list[dict], now: datetime) -> str:
         filters="".join(filters),
         months="\n".join(months),
         jump="".join(jump),
+        jump_options="".join(options),
     )
 
 # ---------------------------------------------------------------------------
