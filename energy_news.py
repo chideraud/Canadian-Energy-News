@@ -25,6 +25,8 @@ from urllib.parse import quote_plus
 from zoneinfo import ZoneInfo
 
 import feedparser
+import socket
+socket.setdefaulttimeout(20)
 
 # ---------------------------------------------------------------------------
 # 1. What to watch — edit these freely
