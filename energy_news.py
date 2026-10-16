@@ -130,6 +130,7 @@ SECTIONS = {
 }
 
 KEEP_DAYS = 183           # stories older than about six months are dropped
+FULL_SEARCH_HOUR = 6      # Toronto hour for the daily six-month sweep; other hours check the past month
 LOCAL_TZ = ZoneInfo("America/Toronto")
 SITE_TITLE = "Canadian Energy Law Brief"
 OUT_DIR = Path(__file__).parent / "docs"
@@ -139,10 +140,20 @@ ARCHIVE = OUT_DIR / "articles.json"
 # 2. Fetch and filter
 # ---------------------------------------------------------------------------
 
+def full_search_due(now: datetime) -> bool:
+    """Search all six months once a day, on manual runs, or when starting fresh.
+    Hourly runs only look at the past month, which keeps Google News requests low."""
+    if os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch":
+        return True
+    if not ARCHIVE.exists():
+        return True
+    return now.astimezone(LOCAL_TZ).hour == FULL_SEARCH_HOUR
+
+
 def search_windows(now: datetime) -> list[tuple[str, str]]:
     """Date ranges to search separately, so older months aren't crowded out.
     Each Google News search returns at most ~100 stories."""
-    edges = [0, 30, 90, KEEP_DAYS]
+    edges = [0, 30, 90, KEEP_DAYS] if full_search_due(now) else [0, 30]
     out = []
     for newer, older in zip(edges, edges[1:]):
         after = (now - timedelta(days=older)).date().isoformat()
@@ -395,7 +406,7 @@ PAGE = """<!doctype html>
 <main>
 {months}
 <p class="empty" id="none" hidden>No stories for this topic in the past six months.</p>
-<footer>Headlines link to the original publishers. Refreshed every morning.</footer>
+<footer>Headlines link to the original publishers. Refreshed every hour.</footer>
 </main>
 <script>
   // Topic filters + "Show more": each month shows its newest stories first.
@@ -578,11 +589,13 @@ def send_email(body: str, now: datetime) -> None:
 if __name__ == "__main__":
     now = datetime.now(timezone.utc)
     OUT_DIR.mkdir(exist_ok=True)
+    full = full_search_due(now)  # checked before the archive is saved
     items = collect(now)
     (OUT_DIR / "index.html").write_text(build_page(items, now), encoding="utf-8")
     this_month = sum(in_this_month(a["published"], now) for a in items)
     print(f"Built docs/index.html: {len(items)} stories, {this_month} this month.")
 
-    if os.environ.get("DIGEST_EMAIL_TO"):
+    # Email at most once a day (with the morning sweep), not every hour.
+    if os.environ.get("DIGEST_EMAIL_TO") and full:
         send_email(build_email(items, now), now)
         print("Email sent.")
