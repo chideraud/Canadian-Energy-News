@@ -2,11 +2,16 @@ name: Daily Energy Brief
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # 11:00 UTC = 7 a.m. Toronto in summer, 6 a.m. in winter
+    - cron: "17 * * * *"   # every hour, at 17 minutes past (less crowded than :00)
   workflow_dispatch:        # adds a "Run workflow" button for testing
 
 permissions:
   contents: write
+
+# If one run is still going when the next one starts, wait instead of clashing.
+concurrency:
+  group: energy-brief
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -21,7 +26,7 @@ jobs:
 
       - run: pip install feedparser
 
-      - name: Build today's page
+      - name: Build the page
         run: python energy_news.py
         env:
           DIGEST_EMAIL_FROM: ${{ secrets.DIGEST_EMAIL_FROM }}
@@ -33,5 +38,5 @@ jobs:
           git config user.name "energy-brief-bot"
           git config user.email "energy-brief-bot@users.noreply.github.com"
           git add docs/
-          git commit -m "Brief for $(date +%F)" || echo "No changes"
+          git commit -m "Brief for $(date -u +'%F %H:%M') UTC" || echo "No changes"
           git push
